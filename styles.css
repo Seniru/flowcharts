@@ -1,0 +1,91 @@
+body {
+	margin: 0;
+}
+
+.draggable {
+	cursor: move;
+}
+
+#palette {
+	height: 100%;
+	width: 170px;
+	display: inline;
+	position: absolute;
+	background-color: rgb(46, 46, 46);
+	border-right: 10px solid rgb(34, 171, 209);
+}
+
+#chart {
+	height: 100%;
+	width: calc(100% - 175px);
+	position: absolute;
+	left: 173px;
+	background-color: rgb(46, 46, 46);
+	display: inline;
+}
+
+#runner {
+	width: calc(20% - 3px);
+	height: 100%;
+	background-color: rgb(60, 60, 60);
+	position: absolute;
+	left: 80%;
+	border-left: 3px solid rgb(34, 171, 209);
+
+}
+
+#console {
+	position: relative;
+	top: 30px;
+	padding: 3px;
+	margin: 5px;
+	height: 90%;
+	width: 95%;
+	background-color: rgb(70, 70, 70);
+	font-family: monospace;
+	font-size: 15px;
+	overflow-y: scroll;
+}
+
+.info, .error, .stdout {
+	padding: 1px;
+}
+
+.info {
+	color: rgb(150, 150, 150);
+}
+
+.error {
+	color: rgb(240, 50, 50);
+}
+
+.stdout {
+	color: rgb(90, 180, 255);
+}
+
+.port {
+	cursor: pointer;
+}
+
+g > foreignObject > input {
+	background-color: transparent;
+	border: 0;
+	padding: 0;
+	margin: auto;
+	text-align: center;
+	font-size: 15px;
+	width: 100%;
+	color: black;
+}
+
+#run {
+	position: relative;
+	border: 0px;
+	border-radius: 3px;
+	top: 15px;
+	left: 5px;
+	color: #4ec495;
+	padding: 3px 10px;
+	background-color: rgb(46, 46, 46);
+	cursor: pointer;
+}
