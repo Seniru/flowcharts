@@ -48,37 +48,25 @@ window.onload = () => {
 				path.setAttributeNS(null, "stroke-width", "3")
 				path.setAttributeNS(null, "stroke", "#7d949e")
 				path.setAttributeNS(null, "d", `M ${activeLink.fromCoords[0]} ${activeLink.fromCoords[1]} L ${coords.x + 1} ${coords.y + 1}`)
-				//path.setAttributeNS(null, "d", `M 100 350 q 150 -300 300 0`)
 				chart.appendChild(path)
 				return
 			} else {
 				if (activeLink && evt.target.classList.contains("in")) {
 					// link the 2 nodes
-					let to = evt.target
-					let appliedTransforms = to.parentElement.transform.baseVal.getItem(0).matrix
-					let toX = parseFloat(to.getAttributeNS(null, "cx")) + appliedTransforms.e
-					let toY = parseFloat(to.getAttributeNS(null, "cy")) + appliedTransforms.f
-
-					//activeLink.element.setAttributeNS(null, "d", `M ${activeLink.fromCoords[0]} ${activeLink.fromCoords[1]} L ${coords.x} ${coords.y}`)
-					activeLink.element.setAttributeNS(null, "d", `M ${activeLink.fromCoords[0]} ${activeLink.fromCoords[1]} L ${toX} ${toY}`)
-					new Link(activeLink.from, to, activeLink.element, structs)
+					new Link(activeLink.from, evt.target, activeLink.element, structs).update()
 					activeLink = null
 					return
 				}
 			}
 		}
-		//console.log("comes here and removes the link?")
 		if (activeLink) chart.removeChild(activeLink.element)
 		activeLink = null
 	})
 
 	chart.addEventListener("mousemove", evt => {
 		if (activeLink) {
-			//let d = activeLink.getAttributeNS(null, "d")
 			let coords = getMousePos(chart, evt)
-
 			activeLink.element.setAttributeNS(null, "d", `M ${activeLink.fromCoords[0]} ${activeLink.fromCoords[1]} L ${coords.x} ${coords.y}`)
-
 		}
 	})
 }
@@ -93,13 +81,10 @@ const makeDraggable = evt => {
 
 	const startDrag = evt => {
 		activePanel = svg
-		//console.log(evt)
 		let parent = evt.target.parentElement
 		if (parent.classList.contains("draggable")) {
 			selected = parent
-			offset = getMousePosition(evt);
-			//offset.x -= parseFloat(selected.getAttributeNS(null, "x"));
-			//offset.y -= parseFloat(selected.getAttributeNS(null, "y"));
+			offset = getMousePosition(evt)
 			if (selected.classList.contains("template")) {
 				let clone = selected.cloneNode(true)
 				clone.classList.remove("template")
@@ -113,14 +98,14 @@ const makeDraggable = evt => {
 				transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
 				  // Create an transform that translates by (0, 0)
 				  let translate = svg.createSVGTransform();
-				  translate.setTranslate(0, 0);
+				  translate.setTranslate(0, 0)
 				  // Add the translation to the front of the transforms list
-				  selected.transform.baseVal.insertItemBefore(translate, 0);
+				  selected.transform.baseVal.insertItemBefore(translate, 0)
 			}
 			// Get initial translation amount
-			transform = transforms.getItem(0);
-			offset.x -= transform.matrix.e;
-			offset.y -= transform.matrix.f;
+			transform = transforms.getItem(0)
+			offset.x -= transform.matrix.e
+			offset.y -= transform.matrix.f
 		}
 	}
 
@@ -129,20 +114,9 @@ const makeDraggable = evt => {
 		if (selected) {
 			evt.preventDefault()
 			let coord = getMousePosition(evt)
-
-			//selected.setAttributeNS(null,"cx", coord.x - offset.x)
-			//selected.setAttributeNS(null, "x", coord.x - offset.x)
-
-			//selected.setAttributeNS(null, "cy", coord.y - offset.y)
-			//selected.setAttributeNS(null, "y", coord.y - offset.y)
 			selected.setAttributeNS(null, "transform", "translate(" + (coord.x - offset.x) + ", " + (coord.y - offset.y)+ ")")
 			if (structs.has(selected)) {
-				//structs.get(selected).next.update()
-				//console.log(structs.get(selected).next)
-				//structs.get(selected).next.update()
-				for (let link of structs.get(selected).links) {
-					link.update()
-				}
+				for (let link of structs.get(selected).links) link.update()
 			}
 		}
 	}

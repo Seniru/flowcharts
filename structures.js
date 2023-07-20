@@ -65,7 +65,6 @@ class Statement extends Node {
 				} catch {}
 				memory[data[2]] = temp
       		} else {
-				//csl.innerHTML += `<div class='error'>[error] Unrecognized instruction ${data[1]}</div>`
 				out.innerHTML += error(`Unrecognized instruction ${data[1]}`)
 			}
     	} else {
@@ -91,11 +90,9 @@ class Input extends Node {
 				} catch {}
 				memory[data[2]] = prompt(`Set value for ${data[2]}`)
 			} else {
-				//csl.innerHTML += `<div class='error'>[error] Unrecognized instruction ${data[1]}</div>`
 				out.innerHTML += error("Unrecognized instruction")
 			}
 		} else {
-			//csl.innerHTML += `<div class='error'>[error] Invalid syntax`
 			out.innerHTML += error("Invalid syntax")
 		}
 	}
@@ -113,7 +110,6 @@ class Output extends Node {
 		if (data) {
 			if (["PRINT", "OUTPUT", "WRITE"].includes(data[1].toUpperCase())) {
         		let outstrm = data[2].split(",").map(x => x.trim()).map(x => memory[x] ? memory[x] : x)
-				//csl.innerHTML += `<div class='stdout'>${outstrm.join(" ")}</div>`
 				out.innerHTML += stdout(outstrm.join(" "))
 			} else {
 				out.innerHTML += error("Unrecognized instruction")
