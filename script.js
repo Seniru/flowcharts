@@ -34,39 +34,36 @@ window.onload = () => {
 			if (!activeLink && evt.target.classList.contains("out")) {
 				// start linking from outwards port
 				let from = evt.target
-				//console.log(coords)
-				let path = document.createElementNS('http://www.w3.org/2000/svg',"path")
 				let appliedTransforms = from.parentElement.transform.baseVal.getItem(0).matrix
 				activeLink = { 
-					element: path,
+					elements: [],
 					from,
 					fromCoords: [
 						parseFloat(from.getAttributeNS(null, "cx")) + appliedTransforms.e,
 						parseFloat(from.getAttributeNS(null, "cy")) + appliedTransforms.f
 					]
 				}
-				path.setAttributeNS(null, "stroke-width", "3")
-				path.setAttributeNS(null, "stroke", "#7d949e")
-				path.setAttributeNS(null, "d", `M ${activeLink.fromCoords[0]} ${activeLink.fromCoords[1]} L ${coords.x + 1} ${coords.y + 1}`)
-				chart.appendChild(path)
 				return
 			} else {
 				if (activeLink && evt.target.classList.contains("in")) {
 					// link the 2 nodes
-					new Link(activeLink.from, evt.target, activeLink.element, structs).update()
+					new Link(activeLink.from, evt.target, activeLink.elements, structs).update(chart)
 					activeLink = null
 					return
 				}
 			}
 		}
-		if (activeLink) chart.removeChild(activeLink.element)
+		if (activeLink) {
+			for (let elem of activeLink.elements) chart.removeChild(elem)
+		}
 		activeLink = null
 	})
 
 	chart.addEventListener("mousemove", evt => {
 		if (activeLink) {
 			let coords = getMousePos(chart, evt)
-			activeLink.element.setAttributeNS(null, "d", `M ${activeLink.fromCoords[0]} ${activeLink.fromCoords[1]} L ${coords.x} ${coords.y}`)
+			for (let elem of activeLink.elements) chart.removeChild(elem)
+			activeLink.elements = Link.drawLink(activeLink.fromCoords[0], activeLink.fromCoords[1], coords.x, coords.y, chart)
 		}
 	})
 }
@@ -116,7 +113,7 @@ const makeDraggable = evt => {
 			let coord = getMousePosition(evt)
 			selected.setAttributeNS(null, "transform", "translate(" + (coord.x - offset.x) + ", " + (coord.y - offset.y)+ ")")
 			if (structs.has(selected)) {
-				for (let link of structs.get(selected).links) link.update()
+				for (let link of structs.get(selected).links) link.update(chart)
 			}
 		}
 	}

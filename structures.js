@@ -159,12 +159,12 @@ class Stop extends Node {
 
 class Link {
 
-	constructor(from, to, element, ctx) {
+	constructor(from, to, elements, ctx) {
 		this.from = ctx.get(from.parentElement)
 		this.fromPort = from
 		this.to = ctx.get(to.parentElement)
 		this.toPort = to
-		this.element = element
+		this.elements = elements
 		this.from.links.push(this)
 		if (this.from instanceof Conditional) {
 			if (!this.from.nxt) {
@@ -181,7 +181,34 @@ class Link {
 		return this.to
 	}
 
-	update() {
+	static _createLinkFragment(fromX, fromY, toX, toY, ctx) {
+		let path = document.createElementNS('http://www.w3.org/2000/svg',"path")
+		path.setAttributeNS(null, "stroke-width", "3")
+		path.setAttributeNS(null, "stroke", "#7d949e")
+		path.setAttributeNS(null, "d", `M ${fromX} ${fromY} L ${toX} ${toY}`)
+		ctx.appendChild(path)
+		return path
+	}
+
+	static drawLink(fromX, fromY, toX, toY, ctx) {
+		let elements = []
+		if (fromY < toY) {
+			let middleY = (fromY + toY) / 2
+			elements.push(Link._createLinkFragment(fromX, fromY, fromX, middleY, ctx))
+			elements.push(Link._createLinkFragment(fromX, middleY, toX, middleY, ctx))
+			elements.push(Link._createLinkFragment(toX, middleY, toX, toY, ctx))
+		} else {
+			let middleX = (fromX + toX) / 2
+			elements.push(Link._createLinkFragment(fromX, fromY, fromX, fromY + 20, ctx))
+			elements.push(Link._createLinkFragment(fromX, fromY + 20, middleX, fromY + 20, ctx))
+			elements.push(Link._createLinkFragment(middleX, fromY + 20, middleX, toY - 20, ctx))
+			elements.push(Link._createLinkFragment(middleX, toY - 20, toX, toY - 20, ctx))
+			elements.push(Link._createLinkFragment(toX, toY - 20, toX, toY, ctx))
+		}
+		return elements
+	}
+
+	update(ctx) {
 		let from = this.fromPort
 		let appliedTransformsFrom = from.parentElement.transform.baseVal.getItem(0).matrix
 		let fromX = parseFloat(from.getAttributeNS(null, "cx")) + appliedTransformsFrom.e
@@ -192,7 +219,10 @@ class Link {
 		let toX = parseFloat(to.getAttributeNS(null, "cx")) + appliedTransformsTo.e
 		let toY = parseFloat(to.getAttributeNS(null, "cy")) + appliedTransformsTo.f
 
-		this.element.setAttributeNS(null, "d", `M ${fromX} ${fromY} L ${toX} ${toY}`)
+		for (let elem of this.elements) {
+			ctx.removeChild(elem)
+		}
+		this.elements = Link.drawLink(fromX, fromY, toX, toY, ctx)		
 
 	}
 
