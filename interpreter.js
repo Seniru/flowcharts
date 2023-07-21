@@ -6,9 +6,8 @@ let stepFunction
 
 let memory = {}
 const execute = entrypoint => {
-	running = true
 	entrypoint.execute(memory)
-	if (entrypoint.next) {
+	if (running && entrypoint.next) {
 		elem = entrypoint.element
 		executor = new Promise((resolve, reject) => {
 			if (debug) {
@@ -18,12 +17,12 @@ const execute = entrypoint => {
 			}
 		})
 		executor.then(() => {
-			entrypoint.element.setAttributeNS(null, "stroke-width", "1px")
+			entrypoint.unhighlight()
 			execute(entrypoint.next)	
 		})
 
 	} else {
-		entrypoint.element.setAttributeNS(null, "stroke-width", "1px")
+		entrypoint.unhighlight()
 		stopExecution()
 	}
 }

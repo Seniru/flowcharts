@@ -16,7 +16,7 @@ class Node {
 	// overridable function
 	execute(memory) {
 		if (debug) {
-			this.element.setAttributeNS(null, "stroke-width", "4px")
+			this.highlight()
 		}
 	}
 
@@ -34,6 +34,23 @@ class Node {
 		return this.element.lastElementChild.children[0].value
 	}
 
+	highlight() {
+		this.element.setAttributeNS(null, "stroke-width", "4px")
+	}
+
+	unhighlight() {
+		this.element.setAttributeNS(null, "stroke-width", "1px")
+	}
+
+	destroy() {
+		for (let link of this.links) {
+			link.destroy(this)
+		}
+		this.element.parentElement.removeChild(this.element)
+		structs.delete(this.element)
+		delete this
+	}
+
 }
 
 class Begin extends Node {
@@ -45,6 +62,11 @@ class Begin extends Node {
 	execute() {
 		super.execute()
 		out.innerHTML = info("Begin execution")
+	}
+
+	destroy() {
+		// do not self destruct
+		return
 	}
 
 }
@@ -228,10 +250,23 @@ class Link {
 		let toY = parseFloat(to.getAttributeNS(null, "cy")) + appliedTransformsTo.f
 
 		for (let elem of this.elements) {
-			ctx.removeChild(elem)
+			if (ctx.contains(elem)) ctx.removeChild(elem)
 		}
 		this.elements = Link.drawLink(fromX, fromY, toX, toY, ctx)		
+	}
 
+	destroy(initiator) {
+		this.from.next = null
+		for (let frag of this.elements) {
+			frag.parentElement.removeChild(frag)
+		}
+		if (initiator != this.from) {
+			this.from.links.splice(this.from.links.indexOf(this))
+		}
+		if (initiator != this.to) {
+			this.to.links.splice(this.to.links.indexOf(this))
+		}
+		delete this
 	}
 
 }
