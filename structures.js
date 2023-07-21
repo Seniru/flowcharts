@@ -15,7 +15,9 @@ class Node {
 
 	// overridable function
 	execute(memory) {
-
+		if (debug) {
+			this.element.setAttributeNS(null, "stroke-width", "4px")
+		}
 	}
 
 	get next() {
@@ -41,6 +43,7 @@ class Begin extends Node {
 	}
 
 	execute() {
+		super.execute()
 		out.innerHTML = info("Begin execution")
 	}
 
@@ -53,6 +56,7 @@ class Statement extends Node {
 	}
 
 	execute(memory) {
+		super.execute()
 		let data = (/(set|calculate|calc)\s+(\w+)\s*=\s*(.*)[;\s\n]*/gmi.exec(this.value))
 		if (data) {
     		if (["SET", "CALCULATE", "CALC"].includes(data[1].toUpperCase())) {
@@ -81,6 +85,7 @@ class Input extends Node {
 	}
 
 	execute(memory) {
+		super.execute()
 		let data = /(\w+)\s+(.+)[;\s\n]*$/gmi.exec(this.value)
 		if (data) {
 			if (["READ", "INPUT"].includes(data[1].toUpperCase())) {
@@ -106,6 +111,7 @@ class Output extends Node {
 	}
 
 	execute(memory) {
+		super.execute()
 		let data = /(\w+)\s+(.+)[;\s\n]*$/gmi.exec(this.value)
 		if (data) {
 			if (["PRINT", "OUTPUT", "WRITE"].includes(data[1].toUpperCase())) {
@@ -125,9 +131,11 @@ class Conditional extends Node {
 
 	constructor(value, next, element) {
 		super(value, next, element)
+		this.nxt = []
 	}
 
 	execute(memory) {
+		super.execute()
 		let conditional = this.value
 			.replace(/^(is|if|\s+)+/g, "")
 			.replace(/(then|\?|\s+)+$/g, "")
@@ -153,7 +161,7 @@ class Stop extends Node {
 	}
 
 	execute(memory) {
-		out.innerHTML += info("Execution stopped")
+		super.execute()
 	}
 }
 

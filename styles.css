@@ -78,7 +78,7 @@ g > foreignObject > input {
 	color: black;
 }
 
-#run {
+#run, #step {
 	position: relative;
 	border: 0px;
 	border-radius: 3px;

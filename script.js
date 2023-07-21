@@ -6,8 +6,10 @@ let selected
 let offset
 let transform
 let activePanel
+let debugBtn, runBtn
 let activeLink
 let structs = new WeakMap()
+
 
 const getMousePos = (svg, evt) => {
 	let CTM = svg.getScreenCTM();
@@ -21,6 +23,8 @@ const getMousePos = (svg, evt) => {
 window.onload = () => {
 	palette = document.getElementById("palette")
 	chart = document.getElementById("chart")
+	debugBtn = document.getElementById("step")
+	runBtn = document.getElementById("run")
 
 	let begin = document.getElementsByClassName("begin")[0]
 
@@ -148,7 +152,42 @@ const makeDraggable = evt => {
 	svg.addEventListener('mouseleave', endDrag)
 }
 
-const run = () => {
+const run = dbg => {
+	memory = {}
+	runBtn.innerHTML = '<i class="fas fa-stop" style="color: #f44336;"></i>'
+	runBtn.title = "Stop"
+	debug = dbg
 	let entrypoint = structs.get(document.getElementsByClassName("begin")[0])
 	execute(entrypoint)
+}
+
+const step = () => {
+	if (!running) {
+		debugBtn.title = "Step"
+		debugBtn.innerHTML = '<i class="fas fa-arrow-right" style="color: #45c9e5;"></i>'
+		return run(true)
+	}
+	dispatchEvent(new Event("onstep"))
+
+}
+
+const stopExecution = () => {
+	out.innerHTML += info("Execution stopped")
+	running = false
+	debugBtn.title = "Debug"
+	debugBtn.innerHTML = '<i class="fas fa-bug"></i>'
+	runBtn.innerHTML = '<i class="fas fa-play"></i>'
+	runBtn.title = "Run"
+	elem.setAttributeNS(null, "stroke-width", "1px")
+
+}
+
+const runOrStop = () => {
+	if (running) return stopExecution()
+	run()
+}
+
+const debugOrStep = () => {
+	if (!running) return step()
+	stepFunction()
 }
