@@ -1,10 +1,15 @@
 // credits: (SVG dragging tutorial) https://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/ 
 
 let selected
-let palette, chart
+let palette, chart, view
 let offset, transform
+let dropped
 let activeNode, activePanel, activeLink
 let debugBtn, runBtn
+let translateX = 0,
+	translateY = 0,
+	scale = 1,
+	movable = false
 
 let structs = new WeakMap()
 
@@ -24,6 +29,7 @@ window.onload = () => {
 	debugBtn = document.getElementById("step")
 	runBtn = document.getElementById("run")
 	out = document.getElementById("console")
+	view = document.getElementById("view")
 
 	let begin = document.getElementsByClassName("begin")[0]
 
@@ -49,7 +55,7 @@ window.onload = () => {
 			} else {
 				if (activeLink && evt.target.classList.contains("in")) {
 					// link the 2 nodes
-					new Link(activeLink.from, evt.target, activeLink.elements, structs).update(chart)
+					new Link(activeLink.from, evt.target, activeLink.elements, structs).update(view)
 					activeLink = null
 					return
 				}
@@ -62,7 +68,7 @@ window.onload = () => {
 
 		// clean up if none of the above
 		if (activeLink) {
-			for (let elem of activeLink.elements) chart.removeChild(elem)
+			for (let elem of activeLink.elements) view.removeChild(elem)
 		}
 		activeLink = null
 		selected = null
@@ -71,15 +77,37 @@ window.onload = () => {
 	chart.addEventListener("mousemove", evt => {
 		if (activeLink) {
 			let coords = getMousePos(chart, evt)
-			for (let elem of activeLink.elements) chart.removeChild(elem)
-			activeLink.elements = Link.drawLink(activeLink.fromCoords[0], activeLink.fromCoords[1], coords.x, coords.y, chart)
+			for (let elem of activeLink.elements) view.removeChild(elem)
+			activeLink.elements = Link.drawLink(activeLink.fromCoords[0], activeLink.fromCoords[1], coords.x - translateX, coords.y - translateY, view)
 		}
+		if (evt.shiftKey && movable) {
+			translateX += evt.movementX
+			translateY += evt.movementY
+			view.setAttributeNS(null, "transform", `translate(${translateX} ${translateY}) scale(${scale})`)
+		} else {
+		}
+	})
+
+	chart.addEventListener("mousedown", evt => {
+		movable = true
+	})
+
+	chart.addEventListener("mouseup", evt => {
+		movable = false
 	})
 
 	addEventListener("keydown", evt => {
 		if (evt.code == "Delete") {
 			selected.destroy()
 			selected = null
+		} else if (evt.key == "Shift") {
+			document.body.style.cursor = "move"
+		}
+	})
+
+	addEventListener("keyup", evt => {
+		if (evt.key == "Shift") {
+			document.body.style.cursor = "default"
 		}
 	})
 }
@@ -94,6 +122,7 @@ const makeDraggable = evt => {
 
 	const startDrag = evt => {
 		activePanel = svg
+		dropped = false
 		let parent = evt.target.parentElement
 		if (parent.classList.contains("draggable")) {
 			activeNode = parent
@@ -127,20 +156,26 @@ const makeDraggable = evt => {
 		if (activeNode) {
 			evt.preventDefault()
 			let coord = getMousePosition(evt)
-			activeNode.setAttributeNS(null, "transform", "translate(" + (coord.x - offset.x) + ", " + (coord.y - offset.y)+ ")")
+			//console.log(evt, evt..ownerSVGElement)
+			//let inView = activePanel == chart || activePanel.ownerSVGElement == chart
+			let tx = dropped ? translateX : 0
+			let ty = dropped ? translateY : 0
+			activeNode.setAttributeNS(null, "transform", "translate(" + (coord.x - offset.x - tx) + ", " + (coord.y - offset.y - ty)+ ")")
 			if (structs.has(activeNode)) {
-				for (let link of structs.get(activeNode).links) link.update(chart)
+				for (let link of structs.get(activeNode).links) link.update(view)
 			}
 		}
 	}
 
 	const endDrag = evt => {
 		if (activeNode && activeNode.classList.contains("temp")) {
-			if (evt.toElement == chart) {
+			if (evt.toElement == chart || evt.toElement == view) {
+				dropped = true
 				let clone = activeNode.cloneNode(true)
 				clone.classList.remove("temp")
 				clone.lastElementChild.children[0]?.removeAttribute("disabled")
-				chart.appendChild(clone)
+				view.appendChild(clone)
+				clone.setAttributeNS(null, "transform", `translate(${-translateX} ${-translateY})`)
 				palette.removeChild(activeNode)
 				for (let type of [Begin, Statement, Input, Output, Conditional, Stop]) {
 					if (clone.classList.contains(type.name.toLowerCase())) {
@@ -193,7 +228,7 @@ const stopExecution = () => {
 	debugBtn.innerHTML = '<i class="fas fa-bug"></i>'
 	runBtn.innerHTML = '<i class="fas fa-play"></i>'
 	runBtn.title = "Run"
-	elem.setAttributeNS(null, "stroke-width", "1px")
+	if (elem) elem.setAttributeNS(null, "stroke-width", "1px")
 
 }
 
