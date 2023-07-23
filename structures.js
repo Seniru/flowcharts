@@ -21,9 +21,7 @@ class Node {
 	}
 
 	get next() {
-		return this instanceof Conditional
-			? (this.result ? this.nxt[0]?.item : this.nxt[1]?.item)
-			: this.nxt?.item
+		return this.nxt?.item
 	}
 
 	set next(value) {
@@ -173,6 +171,16 @@ class Conditional extends Node {
 		} catch (e) {
 			this.result = eval(confirm(this.value))
 		}
+	}
+
+	set next(value) {
+		if (!value) {
+			this.nxt = []
+		}
+	}
+
+	get next() {
+		return (this.result ? this.nxt[0]?.item : this.nxt[1]?.item)
 	}
 }
 

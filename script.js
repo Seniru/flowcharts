@@ -42,6 +42,13 @@ window.onload = () => {
 			if (!activeLink && evt.target.classList.contains("out")) {
 				// start linking from outwards port
 				let from = evt.target
+				let fromStruct = structs.get(from.parentElement)
+				//this.from.nxt[Number(this.fromPort.classList.contains("conditional-true"))] = this
+
+				if (
+					(fromStruct instanceof Conditional && fromStruct.nxt[Number(from.classList.contains("conditional-true"))])
+					|| fromStruct.next
+				) return
 				let appliedTransforms = from.parentElement.transform.baseVal.getItem(0).matrix
 				activeLink = { 
 					elements: [],
