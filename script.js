@@ -16,8 +16,8 @@ let structs = new WeakMap()
 const getMousePos = (svg, evt) => {
 	let CTM = svg.getScreenCTM();
 	return {
-	  x: (evt.clientX - CTM.e) / CTM.a,
-	  y: (evt.clientY - CTM.f) / CTM.d
+	  x: ((evt.clientX - CTM.e) / CTM.a) / scale,
+	  y: ((evt.clientY - CTM.f) / CTM.d) / scale
 	};
   }
 
@@ -95,6 +95,13 @@ window.onload = () => {
 	chart.addEventListener("mouseup", evt => {
 		movable = false
 	})
+
+	addEventListener("wheel", evt => {
+		scale += (evt.deltaY / Math.abs(evt.deltaY)) *  -0.1
+		scale = Math.min(Math.max(0.5, scale), 2)
+		view.setAttributeNS(null, "transform", `translate(${translateX} ${translateY}) scale(${scale})`)
+	})
+
 
 	addEventListener("keydown", evt => {
 		if (evt.code == "Delete") {
