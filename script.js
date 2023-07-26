@@ -83,7 +83,7 @@ window.onload = () => {
 		if (activeLink) {
 			let coords = getMousePos(chart, evt)
 			for (let elem of activeLink.elements) view.removeChild(elem)
-			activeLink.elements = Link.drawLink(activeLink.fromCoords[0], activeLink.fromCoords[1], coords.x - translateX, coords.y - translateY, view)
+			activeLink.elements = Link.drawLink(activeLink.fromCoords[0], activeLink.fromCoords[1], coords.x - translateX / scale, coords.y - translateY / scale, view)
 		}
 		if (evt.shiftKey && movable) {
 			translateX += evt.movementX
