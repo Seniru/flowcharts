@@ -180,6 +180,7 @@ class Conditional extends Node {
 	}
 
 	get next() {
+		if (this.result == null) return null
 		return (this.result ? this.nxt[0]?.item : this.nxt[1]?.item)
 	}
 }

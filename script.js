@@ -43,8 +43,6 @@ window.onload = () => {
 				// start linking from outwards port
 				let from = evt.target
 				let fromStruct = structs.get(from.parentElement)
-				//this.from.nxt[Number(this.fromPort.classList.contains("conditional-true"))] = this
-
 				if (
 					(fromStruct instanceof Conditional && fromStruct.nxt[Number(from.classList.contains("conditional-true"))])
 					|| fromStruct.next
