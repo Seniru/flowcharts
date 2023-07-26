@@ -165,7 +165,7 @@ const makeDraggable = evt => {
 
 	const drag = evt => {
 		activePanel = evt.toElement
-		if (activeNode) {
+		if (activeNode && !activeLink) {
 			evt.preventDefault()
 			let coord = getMousePosition(evt)
 			//console.log(evt, evt..ownerSVGElement)
