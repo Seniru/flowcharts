@@ -83,7 +83,7 @@ window.onload = () => {
 		if (activeLink) {
 			let coords = getMousePos(chart, evt)
 			for (let elem of activeLink.elements) view.removeChild(elem)
-			activeLink.elements = Link.drawLink(activeLink.fromCoords[0], activeLink.fromCoords[1], coords.x - translateX / scale, coords.y - translateY / scale, view)
+			activeLink.elements = Link.drawLink(activeLink.fromCoords[0], activeLink.fromCoords[1], coords.x - translateX / scale, coords.y - (translateY + 5) / scale, view)
 		}
 		if (evt.shiftKey && movable) {
 			translateX += evt.movementX
@@ -99,6 +99,10 @@ window.onload = () => {
 
 	chart.addEventListener("mouseup", evt => {
 		movable = false
+		if (activeLink && evt.target.classList.contains("in")) {
+			new Link(activeLink.from, evt.target, activeLink.elements, structs).update(view)
+			activeLink = null
+		}
 	})
 
 	addEventListener("wheel", evt => {

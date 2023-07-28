@@ -4,7 +4,6 @@ class Node {
 
 	constructor(value, next, element) {
 		this.nxt = next
-		//this.value = value
 		this.element = element
 		// store the results from an input or a conditional
 		this.result = null
@@ -13,7 +12,6 @@ class Node {
 		this.links = []
 	}
 
-	// overridable function
 	execute(memory) {
 		if (debug) {
 			this.highlight()
