@@ -6,7 +6,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Flowcharts</title>
-	<script src="https://kit.fontawesome.com/36fdbb8e6c.js" crossorigin="anonymous"></script>	
+	<script src="https://kit.fontawesome.com/36fdbb8e6c.js" crossorigin="anonymous"></script>
 	<script src="./interpreter.js"></script>
 	<script src="./structures.js"></script>
 	<script src="./script.js"></script>
@@ -15,64 +15,71 @@
 
 <body>
 	<svg id="palette" onload="makeDraggable(evt)">
-		<g class="draggable template statement" stroke="rgb(180, 180, 20)">
-			<rect x="10" y="10" width="150px" height="70px" fill="rgb(27, 172, 204)" />
+		<g class="draggable template statement" stroke="#ccc">
+			<rect x="10" y="10" width="150" height="70" rx="12" ry="12" fill="#4A90E2" />
 			<!--text style="fill: rgb(255, 255, 255); font-family: Arial, sans-serif; font-size: 20px; white-space: pre;"
 				x="65px" y="50">Step</text-->
-			<circle class="port in" cx="85" cy="20" r="6" stroke-width="0px" fill="rgb(57, 233, 44)"></circle>
-			<circle class="port out" cx="85" cy="70" r="6" stroke-width="0px" fill="rgb(255, 30, 30)"></circle>
+			<circle class="port in" cx="85" cy="20" r="6" stroke-width="0px" fill="#7ED957"></circle>
+			<circle class="port out" cx="85" cy="70" r="6" stroke-width="0px" fill="#FF6B6B"></circle>
 			<foreignObject x="10px" y="35px" width="150px" height="30px">
 				<input type="text" value="Step" xmlns="http://www.w3.org/1999/xhtml" disabled>
 			</foreignObject>
 		</g>
 
-		<g class="draggable template conditional" stroke="rgb(180, 180, 20)">
-			<rect x="130px" y="10px" width="100px" height="100px" transform="rotate(45)" fill="rgb(183, 27, 204)" />
-			<circle class="port in" cx="85" cy="115px" r="6" stroke-width="0px" fill="rgb(57, 233, 44)"></circle>
-			<circle class="port out conditional-true" cx="25px" cy="170px" r="6" stroke-width="0px" fill="rgb(255, 30, 30)"></circle>
-			<circle class="port out conditional-false" cx="145px" cy="170px" r="6" stroke-width="0px" fill="rgb(255, 30, 30)"></circle>
-			<text style="fill: rgb(255, 255, 255); font-family: Arial, sans-serif; font-size: 15px; white-space: pre;" stroke-width="0"
-				x="0" y="175">F</text>
-			<text style="fill: rgb(255, 255, 255); font-family: Arial, sans-serif; font-size: 15px; white-space: pre;" stroke-width="0"
-				x="160" y="175">T</text>
+		<g class="draggable template conditional" stroke="#ccc">
+			<rect x="130px" y="10px" width="100px" height="100px" transform="rotate(45)" fill="#7B3FAF" rx="12"
+				ry="12" />
+			<circle class="port in" cx="85" cy="115px" r="6" stroke-width="0px" fill="#7ED957"></circle>
+			<circle class="port out conditional-true" cx="28px" cy="170px" r="6" stroke-width="0px" fill="#FF6B6B">
+			</circle>
+			<circle class="port out conditional-false" cx="142px" cy="170px" r="6" stroke-width="0px" fill="#FF6B6B">
+			</circle>
+			<text style="fill: rgb(255, 255, 255); font-family: Arial, sans-serif; font-size: 15px; white-space: pre;"
+				stroke-width="0" x="5" y="175">F</text>
+			<text style="fill: rgb(255, 255, 255); font-family: Arial, sans-serif; font-size: 15px; white-space: pre;"
+				stroke-width="0" x="155" y="175">T</text>
 			<foreignObject x="30px" y="165px" width="108px" height="30px">
 				<input type="text" value="Condition" xmlns="http://www.w3.org/1999/xhtml" disabled>
 			</foreignObject>
 		</g>
 
-		<g class="draggable template input" stroke="rgb(180, 180, 20)">
-			<polygon points="30 270 160 270 140 340 10 340" fill="rgb(255, 229, 28)" />
-			<circle class="port in" cx="85" cy="280" r="6" stroke-width="0px" fill="rgb(57, 233, 44)"></circle>
-			<circle class="port out" cx="85" cy="330" r="6" stroke-width="0px" fill="rgb(255, 30, 30)"></circle>
+		<g class="draggable template input" stroke="#ccc">
+			<rect x="200" y="270" width="120" height="70" rx="12" ry="12" fill="#D9B219" transform="skewX(-30)" />
+			<circle class="port in" cx="85" cy="280" r="6" stroke-width="0px" fill="#7ED957"></circle>
+			<circle class="port out" cx="85" cy="330" r="6" stroke-width="0px" fill="#FF6B6B"></circle>
 			<foreignObject x="10px" y="295px" width="150px" height="30px">
 				<input type="text" value="Read" xmlns="http://www.w3.org/1999/xhtml" disabled>
 			</foreignObject>
 		</g>
 
-		<g class="draggable template output" stroke="rgb(180, 180, 20)">
-			<polygon points="30 370 160 370 140 440 10 440" fill="rgb(255, 229, 28)" />
-			<circle class="port in" cx="85" cy="380" r="6" stroke-width="0px" fill="rgb(57, 233, 44)"></circle>
-			<circle class="port out" cx="85" cy="430" r="6" stroke-width="0px" fill="rgb(255, 30, 30)"></circle>
+
+
+		<g class="draggable template output" stroke="#ccc">
+			<rect x="255" y="370" width="120" height="70" rx="10" ry="10" fill="#D9B219" transform="skewX(-30)" />
+			<circle class="port in" cx="85" cy="380" r="6" stroke-width="0px" fill="#7ED957"></circle>
+			<circle class="port out" cx="85" cy="430" r="6" stroke-width="0px" fill="#FF6B6B"></circle>
 			<foreignObject x="10px" y="395px" width="150px" height="30px">
 				<input type="text" value="Write" xmlns="http://www.w3.org/1999/xhtml" disabled>
-			</foreignObject>			
+			</foreignObject>
 		</g>
 
-		<g class="draggable template stop" stroke="rgb(180, 180, 20)">
-			<circle cx="80" cy="520" r="50" fill="rgb(255, 30, 30)" />
-			<text style="font-family: Arial, sans-serif; font-size: 15px; white-space: pre;"
-				x="65" y="525" stroke-width="0px">Stop</text>
-			<circle class="port in" cx="80" cy="480" r="6" stroke-width="0px" fill="rgb(57, 233, 44)"></circle>
+		<g class="draggable template stop" stroke="#ccc">
+			<circle cx="80" cy="500" r="30" fill="#FF6B6B" />
+			<text style="font-family: Segoe UI, Arial, sans-serif; font-size: 15px; white-space: pre;" x="65" y="508"
+				stroke-width="0px">Stop</text>
+			<circle class="port in" cx="80" cy="480" r="6" stroke-width="0px" fill="#7ED957"></circle>
 		</g>
 	</svg>
 
-	<svg id="chart" onload="makeDraggable(evt)" stroke="rgb(180, 180, 20)">
+	<svg id="chart" onload="makeDraggable(evt)" stroke="#ccc">
 		<g id="view" transform="translate(0 0) scale(1)">
 			<g class="draggable start begin">
-				<circle cx="50" cy="50" r="50" fill="rgb(57, 233, 44)" />
-				<text style="font-family: Arial, sans-serif; font-size: 15px; white-space: pre;"
-					x="35" y="55" stroke-width="0px">Start</text>
-				<circle class="port out" cx="50" cy="90" r="6" stroke-width="0px" fill="rgb(255, 30, 30)"></circle>
+				<circle cx="50" cy="50" r="30" fill="#7ED957" />
+				<text style="font-family: Segoe UI, Arial, sans-serif; font-size: 15px;" text-anchor="middle"
+					fill="#222" x="50" y="55" stroke-width="0px">
+					Start
+				</text>
+				<circle class="port out" cx="50" cy="70" r="6" stroke-width="0px" fill="#FF6B6B"></circle>
 			</g>
 		</g>
 	</svg>
